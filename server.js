@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-const { allowedNodeEnvironmentFlags } = require('process');
+const { allowedNodeEnvironmentFlags, title } = require('process');
 const { connect } = require('http2');
 
 rolesArray = [];
@@ -93,53 +93,63 @@ function allRoles() {
 
 function addEmployee() {
     connection.query('SELECT * FROM role', function(err, res) {
-        if (err) throw err;
-        const rolesArray = res;
-      });
+        //nif (err) throw err;
+        const roles = res.map(myFunction)
 
-    connection.query('SELECT * FROM manager', function(err, res) {
-        if (err) throw err;
-        const managersArray = res;
-      })
-
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "employeeFirstName",
-            message: "What is the employee's first name?"
-        },
-        {
-            type: "input",
-            name: "employeeLastName",
-            message: "What is the employee's last name?"
-        },
-        {
-            type: "list",
-            name: "employeeRole",
-            message: "What is the employee's role?",
-            choices: ['Sales Lead', 'Salesperson', 'Legal Lead', 'Engineering Lead', 
-            'Software Engineer', 'Finance Lead']
-        },
-        {
-            type: "list",
-            name: "employeeManager",
-            message: "Who is the employee's manager?",
-            choices: ['Max Smith', 'Zack Martin']
-
+        function myFunction(role) {
+            return {name: role.title, value: role.id}
         }
-    ])
-    .then(addEmployee => {
-        connection.query('INSERT INTO employee SET ?',
-            {
-                first_name: addEmployee.employeeFirstName,
-                last_name: addEmployee.employeeLastName
-            },
-            function(err, res) {
-            // if (err) throw err;
-            //console.log(res.affectedRows + ' added!\n');
+
+        connection.query('SELECT * FROM manager', function(err, res) {
+            //if (err) throw err;
+            const managers = res.map(myFunction)
+    
+            function myFunction(manager) {
+                return {name: manager.name, value: manager.id}
             }
-        )
-    })
+    
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "employeeFirstName",
+                    message: "What is the employee's first name?"
+                },
+                {
+                    type: "input",
+                    name: "employeeLastName",
+                    message: "What is the employee's last name?"
+                },
+                {
+                    type: "list",
+                    name: "employeeRole",
+                    message: "What is the employee's role?",
+                    choices: roles 
+                },
+                {
+                    type: "list",
+                    name: "employeeManager",
+                    message: "Who is the employee's manager?",
+                    choices: managers
+        
+                }
+            ])  
+            .then(addEmployee => {
+                connection.query('INSERT INTO employee SET ?',
+                    {
+                        first_name: addEmployee.employeeFirstName,
+                        last_name: addEmployee.employeeLastName,
+                        role_id: addEmployee.employeeRole,
+                        manager_id: addEmployee.employeeManager
+                    },
+                    function(err, res) {
+                    // if (err) throw error
+                    console.log('New employee was added!\n');
+                    afterConnection();
+                    }
+                )
+            })      
+        })
+      });
 };
 
 function addDepartment () {
@@ -165,31 +175,52 @@ function addDepartment () {
 }
 
 function updateEmployeeRole() {
-    inquirer.prompt([
-        {
-            type: "list",
-            name: "chooseEmployee",
-            message: "Which employee do you want to update?",
-            choice: ['Max Smith', 'Susie Sanders', 'Zack Martin', 'Sydney Sawyer']
-        },
-        {
-            type: "input",
-            name: "updatedRole",
-            message: "What is this employee's new role?"
+    connection.query('SELECT * FROM employee', function(err, res) {
+        //if (err) throw err;
+        const employees = res.map(myFunction)
+
+        function myFunction(employee) {
+            return {name: employee.first_name + ' ' + employee.last_name, value: employee.id}
         }
-    ])
-    .then(updateEmployee => {
-            connection.query(`UPDATE employee SET ? WHERE ?`,
-            {
-                role: updateEmployee.updatedRole
-            },
-            {
-                
-            },
-            function(err, res) {
-                if (err) throw err;
-                console.log('New department: ' + userDepartment.newDepartment + ' added!\n');
-                afterConnection();
+
+        connection.query('SELECT * FROM role', function(err, res) {
+            //if (err) throw err;
+            const roles = res.map(myFunction)
+    
+            function myFunction(role) {
+                return {name: role.title, value: role.id}
+            }
+
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "chooseEmployee",
+                    message: "Which employee do you want to update?",
+                    choices: employees
+                },
+                {
+                    type: "list",
+                    name: "updatedRole",
+                    message: "What is this employee's new role?",
+                    choices: roles
+                }
+            ])
+            .then(updateEmployee => {
+                connection.query(`UPDATE employee SET ? WHERE ?`,
+                {
+                    role: updateEmployee.updatedRole
+                },
+                {
+                    id: updateEmployee.chooseEmployee
+                },
+                function(err, res) {
+                    if (err) throw err;
+                    console.log( updateEmployee.chooseEmployee + ' was updated!\n');
+                    afterConnection();
+                })
             })
         })
+        
+    })
+   
 };
