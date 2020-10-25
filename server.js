@@ -60,7 +60,8 @@ afterConnection = () => {
 };
 
 function allEmployees() {
-    connection.query('SELECT * FROM employee', function(err, res) {
+    connection.query('SELECT employee.id, employee.first_name, employee.last_name, role.title AS `role`, department.name AS `department`, role.salary, manager.name AS `manager` FROM employee INNER JOIN role ON employee.role_id = role.id LEFT JOIN manager ON employee.manager_id = manager.id LEFT JOIN department ON role.department_id = department.id;',
+     function(err, res) {
         //if (err) throw err;
         console.table(res);
 
@@ -102,7 +103,8 @@ function addEmployee() {
             type: "list",
             name: "employeeRole",
             message: "What is the employee's role?",
-            choices: ['Teacher', 'Principal', 'Nurse']
+            choices: ['Sales Lead', 'Salesperson', 'Legal Lead', 'Engineering Lead', 
+            'Software Engineer', 'Finance Lead']
         },
         {
             type: "list",
@@ -115,14 +117,12 @@ function addEmployee() {
     .then(addEmployee => {
         connection.query('INSERT INTO employee SET ?',
             {
-            first_name: addEmployee.employeeFirstName,
+                first_name: addEmployee.employeeFirstName,
                 last_name: addEmployee.employeeLastName
             },
-         // role_id: , 
-         // manager_id
             function(err, res) {
             // if (err) throw err;
-            console.log(res.affectedRows + ' added!\n');
+            //console.log(res.affectedRows + ' added!\n');
             }
         )
     })
