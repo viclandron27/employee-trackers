@@ -14,6 +14,12 @@ CREATE TABLE employee (
 
 );
 
+CREATE TABLE manager (
+  id INTEGER AUTO_INCREMENT NOT NULL,
+  name VARCHAR(30) NOT NULL,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE role (
   id INTEGER AUTO_INCREMENT NOT NULL,
   title VARCHAR(30) NOT NULL,
@@ -27,3 +33,5 @@ CREATE TABLE department (
   name VARCHAR(30) NOT NULL,
   PRIMARY KEY (id)
 );
+
+
