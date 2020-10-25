@@ -2,6 +2,10 @@ const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const { allowedNodeEnvironmentFlags } = require('process');
+const { connect } = require('http2');
+
+rolesArray = [];
+managersArray = [];
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -88,6 +92,16 @@ function allRoles() {
 }
 
 function addEmployee() {
+    connection.query('SELECT * FROM role', function(err, res) {
+        if (err) throw err;
+        const rolesArray = res;
+      });
+
+    connection.query('SELECT * FROM manager', function(err, res) {
+        if (err) throw err;
+        const managersArray = res;
+      })
+
     inquirer.prompt([
         {
             type: "input",
