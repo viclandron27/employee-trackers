@@ -1,3 +1,9 @@
+DROP DATABASE IF EXISTS employeeDB;
+
+CREATE DATABASE employeeDB;
+
+USE employeeDB;
+
 CREATE TABLE employee (
   id INTEGER PRIMARY KEY,
   first_name VARCHAR(30) NOT NULL,

@@ -1,6 +1,6 @@
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES
-('Max', 'Smith', 1, 2),
-('Susie', 'Sanders', 1, 1),
-('Zack', 'Martin', 3, 3);
+(1, 'Max', 'Smith', 1, 2),
+(2, 'Susie', 'Sanders', 1, 1),
+(3, 'Zack', 'Martin', 3, 3);
 
