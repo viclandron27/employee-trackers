@@ -85,3 +85,40 @@ function allRoles() {
         afterConnection();
     })
 }
+
+function addEmployee() {
+    inquirer.prompt([
+    {
+        type: "input",
+        name: "employeeFirstName",
+        message: "What is the employee's first name?"
+    },
+    {
+        type: "input",
+        name: "employeeLastName",
+        message: "What is the employee's last name?"
+    },
+    {
+        type: "list",
+        name: "employeeRole",
+        message: "What is the employee's role?",
+        choices: ['Teacher', 'Principal', 'Nurse']
+    },
+    {
+        type: "list",
+        name: "employeeManager",
+        message: "Who is the employee's manager?"
+
+    }
+    ])
+    //connection.query('INSERT INTO employee SET ?',
+        //{
+          //first_name: ,
+         // last_name: ,
+         // role_id: , 
+         // manager_id
+        //},
+        //function(err, res) {
+         // if (err) throw err;
+        //  console.log(res.affectedRows + ' products deleted!\n');
+}

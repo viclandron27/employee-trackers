@@ -1,19 +1,23 @@
-INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
-(1, 'Max', 'Smith', 1, 2),
-(2, 'Susie', 'Sanders', 1, 1),
-(3, 'Zack', 'Martin', 3, 3);
+('Max', 'Smith', 1, 0),
+('Susie', 'Sanders', 2, 1),
+('Zack', 'Martin', 4, 0),
+('Jackie', 'Sawyer', 5, 2);
 
-INSERT INTO role (id, title, salary, department_id)
+INSERT INTO role (title, salary, department_id)
 VALUES
-(1, 'Teacher', 30.2, 1),
-(2, 'Principal', 60.1, 2),
-(3, 'Nurse', 40.3, 4);
+('Sales Lead', 30.2, 4),
+('Salesperson', 10.5, 4),
+('Legal Lead', 60.1, 3),
+('Engineering Lead', 40.3, 1),
+('Software Engineer', 20.4, 1),
+('Finance Lead', 100.3, 2);
 
-INSERT INTO department (id, name)
+INSERT INTO department ( name)
 VALUES
-(1, 'Elementary School'),
-(2, 'Middle School'),
-(3, 'High School'),
-(4, 'Entire School')
+('Engineering'),
+('Finance'),
+('Legal'),
+('Sales');
 
