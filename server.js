@@ -176,7 +176,7 @@ function addDepartment () {
 
 function updateEmployeeRole() {
     connection.query('SELECT * FROM employee', function(err, res) {
-        //if (err) throw err;
+        if (err) {console.log("----Hit DB error with message: \n", err)}
         const employees = res.map(myFunction)
 
         function myFunction(employee) {
@@ -184,7 +184,7 @@ function updateEmployeeRole() {
         }
 
         connection.query('SELECT * FROM role', function(err, res) {
-            //if (err) throw err;
+            if (err) {console.log("----Hit DB error with message: \n", err)}
             const roles = res.map(myFunction)
     
             function myFunction(role) {
@@ -206,18 +206,17 @@ function updateEmployeeRole() {
                 }
             ])
             .then(updateEmployee => {
-                connection.query(`UPDATE employee SET ? WHERE ?`,
-                {
-                    role: updateEmployee.updatedRole
-                },
-                {
-                    id: updateEmployee.chooseEmployee
-                },
-                function(err, res) {
-                    if (err) throw err;
-                    console.log( updateEmployee.chooseEmployee + ' was updated!\n');
-                    afterConnection();
-                })
+                connection.query(`UPDATE employee SET role_id= ? WHERE id= ?`,
+                    [updateEmployee.updatedRole, updateEmployee.chooseEmployee],
+                    
+                    function(err, res) {
+                        if (err) {
+                            console.log("----Hit DB error with message: \n", err)
+                        }
+                        console.log('Role was updated!\n');
+                        afterConnection();
+                    }
+                )  
             })
         })
         
